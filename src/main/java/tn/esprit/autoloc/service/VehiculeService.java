@@ -1,33 +1,42 @@
+
 package tn.esprit.autoloc.service;
 
-import tn.esprit.autoloc.domain.Vehicule;
+import org.springframework.stereotype.Service;
 import tn.esprit.autoloc.domain.Vehicule;
 import tn.esprit.autoloc.repository.VehiculeRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class VehiculeService implements IVehiculeService{
+@Service
+public class VehiculeService implements IVehiculeService {
 
-    VehiculeRepository vehiculeRepository;
-    
+    private final VehiculeRepository vehiculeRepository;
+
+    public VehiculeService(VehiculeRepository vehiculeRepository) {
+        this.vehiculeRepository = vehiculeRepository;
+    }
+
     @Override
     public List<Vehicule> retrieveAllVehicules() {
-        return (List<Vehicule>) vehiculeRepository.findAll();
+        List<Vehicule> vehicules = new ArrayList<>();
+        vehiculeRepository.findAll().forEach(vehicules::add);
+        return vehicules;
     }
 
     @Override
-    public Vehicule addVehicule(Vehicule c) {
-        return vehiculeRepository.save(c);
+    public Vehicule addVehicule(Vehicule v) {
+        return vehiculeRepository.save(v);
     }
 
     @Override
-    public Vehicule updateVehicule(Vehicule c) {
-        return vehiculeRepository.save(c);
+    public Vehicule updateVehicule(Vehicule v) {
+        return vehiculeRepository.save(v);
     }
 
     @Override
     public Vehicule retrieveVehicule(Long idVehicule) {
-        return  vehiculeRepository.findById(idVehicule).orElse(null);
+        return vehiculeRepository.findById(idVehicule).orElse(null);
     }
 
     @Override
@@ -36,7 +45,9 @@ public class VehiculeService implements IVehiculeService{
     }
 
     @Override
-    public List<Vehicule> addVehicules(List<Vehicule> Vehicules) {
-        return (List<Vehicule>) vehiculeRepository.saveAll(Vehicules);
+    public List<Vehicule> addVehicules(List<Vehicule> vehicules) {
+        List<Vehicule> result = new ArrayList<>();
+        vehiculeRepository.saveAll(vehicules).forEach(result::add);
+        return result;
     }
 }

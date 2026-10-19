@@ -1,17 +1,27 @@
+
 package tn.esprit.autoloc.service;
 
+import org.springframework.stereotype.Service;
 import tn.esprit.autoloc.domain.Client;
 import tn.esprit.autoloc.repository.ClientRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ClientService implements IClientService{
+@Service
+public class ClientService implements IClientService {
 
-    ClientRepository clientRepository;
+    private final ClientRepository clientRepository;
+
+    public ClientService(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
+    }
 
     @Override
     public List<Client> retrieveAllClients() {
-        return (List<Client>) clientRepository.findAll();
+        List<Client> clients = new ArrayList<>();
+        clientRepository.findAll().forEach(clients::add);
+        return clients;
     }
 
     @Override
@@ -26,7 +36,7 @@ public class ClientService implements IClientService{
 
     @Override
     public Client retrieveClient(Long idClient) {
-        return  clientRepository.findById(idClient).orElse(null);
+        return clientRepository.findById(idClient).orElse(null);
     }
 
     @Override
@@ -36,7 +46,8 @@ public class ClientService implements IClientService{
 
     @Override
     public List<Client> addClients(List<Client> clients) {
-        return (List<Client>) clientRepository.saveAll(clients);
+        List<Client> result = new ArrayList<>();
+        clientRepository.saveAll(clients).forEach(result::add);
+        return result;
     }
 }
-
